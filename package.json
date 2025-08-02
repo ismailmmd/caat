@@ -6,7 +6,8 @@
   "description": "A CLI tool that converts Markdown files to styled terminal output with colors and formatting",
   "scripts": {
     "test": "node cli.js test.md",
-    "start": "node cli.js"
+    "start": "node cli.js",
+    "prepublishOnly": "npm test"
   },
   "bin": {
     "tomd": "cli.js"

@@ -1,0 +1,10 @@
+test.md
+.DS_Store
+*.log
+node_modules/
+.git/
+.vscode/
+.idea/
+*.tmp
+*.temp
+.github/
