@@ -28,6 +28,24 @@ jobs:
           node-version: 20
           registry-url: https://registry.npmjs.org/
       - run: npm ci
+      - name: Update package.json version from release tag
+        run: |
+          # Extract version from GitHub release tag (remove 'v' prefix if present)
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}
+          echo "Release tag version: $VERSION"
+          
+          # Get current version from package.json
+          CURRENT_VERSION=$(node -p "require('./package.json').version")
+          echo "Current package.json version: $CURRENT_VERSION"
+          
+          # Only update if versions don't match
+          if [ "$VERSION" != "$CURRENT_VERSION" ]; then
+            echo "Updating package.json version to: $VERSION"
+            npm version $VERSION --no-git-tag-version
+          else
+            echo "Version already matches, skipping update"
+          fi
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
