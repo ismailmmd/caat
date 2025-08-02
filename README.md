@@ -2,6 +2,8 @@
 
 A CLI tool that converts Markdown files to beautifully styled terminal output with colors and formatting.
 
+Why tomd? Well, just like Tom 🐱 chases Jerry 🐭, **tomd** chases away boring plain text! It's the cat's meow alternative to `cat` for reading Markdown - because who wants to stare at raw markup when you can have rainbow-colored, properly formatted prose? 🌈✨
+
 ## Installation
 
 Install globally via npm:
