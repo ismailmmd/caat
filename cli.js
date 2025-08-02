@@ -6,18 +6,24 @@ import chalk from 'chalk';
 
 const filePath = process.argv[2];
 if (!filePath) {
-  console.error("Usage: tomd <markdown-file>");
+  console.error(chalk.red("Error: Please provide a markdown file"));
+  console.error(chalk.yellow("Usage: tomd <markdown-file>"));
   process.exit(1);
 }
 
 if (!fs.existsSync(filePath)) {
-  console.error(`Error: File '${filePath}' not found.`);
+  console.error(chalk.red(`Error: File '${filePath}' not found.`));
   process.exit(1);
 }
 
-const md = fs.readFileSync(filePath, "utf8");
-
-const htmlOutput = marked.parse(md);
+try {
+  const md = fs.readFileSync(filePath, "utf8");
+  const htmlOutput = marked.parse(md);
+  console.log(htmlToTerminal(htmlOutput));
+} catch (error) {
+  console.error(chalk.red(`Error reading file: ${error.message}`));
+  process.exit(1);
+}
 
 function htmlToTerminal(html) {
   let output = html;
@@ -125,5 +131,3 @@ function htmlToTerminal(html) {
   
   return output.trim() + '\n';
 }
-
-console.log(htmlToTerminal(htmlOutput));
