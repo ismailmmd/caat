@@ -1,5 +1,5 @@
 {
-  "name": "tomd",
+  "name": "@slowcode/tomd",
   "version": "1.0.0",
   "type": "module",
   "main": "cli.js",
@@ -29,7 +29,7 @@
   "homepage": "https://github.com/ismailmmd/tomd#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ismailmmd/tomd.git"
+    "url": "git+https://github.com/ismailmmd/tomd.git"
   },
   "bugs": {
     "url": "https://github.com/ismailmmd/tomd/issues"
