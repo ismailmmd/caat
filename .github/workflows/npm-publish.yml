@@ -21,6 +21,8 @@ jobs:
   publish-npm:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push commits back to repo
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -43,6 +45,19 @@ jobs:
           if [ "$VERSION" != "$CURRENT_VERSION" ]; then
             echo "Updating package.json version to: $VERSION"
             npm version $VERSION --no-git-tag-version
+            
+            # Configure git for the commit
+            git config --local user.email "action@github.com"
+            git config --local user.name "GitHub Action"
+            
+            # Commit the version change (both package.json and package-lock.json)
+            git add package.json package-lock.json
+            git commit -m "chore: update package.json version to $VERSION [skip ci]"
+            
+            # Push back to the repository
+            git push origin HEAD:main
+            
+            echo "Version updated and committed to repository"
           else
             echo "Version already matches, skipping update"
           fi
