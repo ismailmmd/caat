@@ -1,0 +1,53 @@
+{
+  "name": "tomd",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "cli.js",
+  "description": "A CLI tool that converts Markdown files to styled terminal output with colors and formatting",
+  "scripts": {
+    "test": "node cli.js test.md",
+    "start": "node cli.js"
+  },
+  "bin": {
+    "tomd": "cli.js"
+  },
+  "keywords": [
+    "markdown",
+    "terminal",
+    "cli",
+    "converter",
+    "styled-output",
+    "chalk",
+    "markdown-viewer",
+    "console",
+    "formatting",
+    "colors"
+  ],
+  "author": "Ismail M",
+  "license": "MIT",
+  "homepage": "https://github.com/ismailmmd/tomd#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ismailmmd/tomd.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ismailmmd/tomd/issues"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "preferGlobal": true,
+  "files": [
+    "cli.js",
+    "README.md"
+  ],
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "marked": "^16.1.1"
+  },
+  "devDependencies": {},
+  "funding": {
+    "type": "individual",
+    "url": "https://github.com/sponsors/ismailmmd"
+  }
+}
