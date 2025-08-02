@@ -1,6 +1,6 @@
 {
   "name": "@slowcode/tomd",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "type": "module",
   "main": "cli.js",
   "description": "A CLI tool that converts Markdown files to styled terminal output with colors and formatting",
