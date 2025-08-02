@@ -7,7 +7,10 @@
   "scripts": {
     "test": "node cli.js test.md",
     "start": "node cli.js",
-    "prepublishOnly": "npm test"
+    "prepublishOnly": "npm test",
+    "version:patch": "npm version patch",
+    "version:minor": "npm version minor",
+    "version:major": "npm version major"
   },
   "bin": {
     "tomd": "cli.js"
