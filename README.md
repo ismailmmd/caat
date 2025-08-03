@@ -10,7 +10,7 @@ Why **caat**? Just like the Unix `cat` command concatenates and displays files, 
 
 ## Installation
 
-Install globally via npm:
+Install globally via :crystal_ball:[npm](https://www.npmjs.com/package/@slowcode/caat):
 
 ```bash
 npm install -g @slowcode/caat
