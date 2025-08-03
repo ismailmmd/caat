@@ -139,7 +139,7 @@ function htmlToTerminal(html) {
   return output.trim() + '\n';
 }
 
-const renderCodeBlock = (code, language = null) => {
+function renderCodeBlock(code, language = null) {
   const cleanCode = code.trim();
   const lines = cleanCode.split('\n');
   const maxLength = Math.max(...lines.map(l => l.length), language ? language.length + 4 : 5);
