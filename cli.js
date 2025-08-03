@@ -27,67 +27,69 @@ try {
 
 function htmlToTerminal(html) {
   let output = html;
-  
+
+  // Replace code blocks
+  output = output.replace(/<pre><code[^>]*class="language-([^"]*)"[^>]*>(.*?)<\/code><\/pre>/gs, (_, lang, code) => {
+    return renderCodeBlock(code, lang);
+  });
+
+  output = output.replace(/<pre><code[^>]*>(.*?)<\/code><\/pre>/gs, (_, code) => {
+    return renderCodeBlock(code);
+  });
+
+  // Replace inline code
+  output = output.replace(/<code[^>]*>(.*?)<\/code>/g, (_, code) => {
+    return chalk.dim('`') + chalk.cyan(code) + chalk.dim('`');
+  });
+
   // Replace HTML headings with styled versions
   output = output.replace(/<h1[^>]*>(.*?)<\/h1>/g, (_, text) => {
     return chalk.bold.underline.magenta(text.replace(/<[^>]*>/g, '')) + '\n\n';
   });
-  
+
   output = output.replace(/<h2[^>]*>(.*?)<\/h2>/g, (_, text) => {
     return chalk.bold.cyan(text.replace(/<[^>]*>/g, '')) + '\n\n';
   });
-  
+
   output = output.replace(/<h3[^>]*>(.*?)<\/h3>/g, (_, text) => {
     return chalk.bold.yellow(text.replace(/<[^>]*>/g, '')) + '\n';
   });
-  
+
   output = output.replace(/<h[456][^>]*>(.*?)<\/h[456]>/g, (_, text) => {
     return chalk.bold.green(text.replace(/<[^>]*>/g, '')) + '\n';
   });
-  
-  // Replace paragraphs
+
+  // Replace paragraphs 
   output = output.replace(/<p[^>]*>(.*?)<\/p>/gs, (_, text) => {
     return text.replace(/<[^>]*>/g, '') + '\n\n';
   });
-  
-  // Replace code blocks
-  output = output.replace(/<pre><code[^>]*class="language-([^"]*)"[^>]*>(.*?)<\/code><\/pre>/gs, (_, lang, code) => {
-    const languageLabel = lang ? chalk.gray(`[${lang}]`) + '\n' : '';
-    return '\n' + languageLabel + chalk.bgBlack.white(' ' + code.replace(/\n/g, '\n ') + ' ') + '\n\n';
-  });
-  
-  output = output.replace(/<pre><code[^>]*>(.*?)<\/code><\/pre>/gs, (_, code) => {
-    return '\n' + chalk.bgBlack.white(' ' + code.replace(/\n/g, '\n ') + ' ') + '\n\n';
-  });
-  
-  // Replace inline code
-  output = output.replace(/<code[^>]*>(.*?)<\/code>/g, (_, code) => {
-    return chalk.bgGray.black(` ${code} `);
-  });
-  
+
+
   // Replace strong/bold
   output = output.replace(/<strong[^>]*>(.*?)<\/strong>/g, (_, text) => {
     return chalk.bold(text);
   });
-  
+
   output = output.replace(/<b[^>]*>(.*?)<\/b>/g, (_, text) => {
     return chalk.bold(text);
   });
-  
+
   // Replace emphasis/italic
   output = output.replace(/<em[^>]*>(.*?)<\/em>/g, (_, text) => {
     return chalk.italic(text);
   });
-  
+
   output = output.replace(/<i[^>]*>(.*?)<\/i>/g, (_, text) => {
     return chalk.italic(text);
   });
-  
-  // Replace links
+
+  // Replace links with clickable terminal hyperlinks
   output = output.replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g, (_, href, text) => {
-    return chalk.blue.underline(text) + chalk.gray(` (${href})`);
+    const cleanText = text.replace(/<[^>]*>/g, '');
+    const clickableLink = `\u001b]8;;${href}\u001b\\${chalk.blue.underline(cleanText)}\u001b]8;;\u001b\\`;
+    return clickableLink;
   });
-  
+
   // Replace blockquotes
   output = output.replace(/<blockquote[^>]*>(.*?)<\/blockquote>/gs, (_, quote) => {
     const cleanQuote = quote.replace(/<[^>]*>/g, '').trim();
@@ -95,7 +97,7 @@ function htmlToTerminal(html) {
     const styledLines = lines.map(line => line.trim() ? chalk.gray('│ ') + line : '');
     return '\n' + styledLines.join('\n') + '\n\n';
   });
-  
+
   // Replace unordered lists
   output = output.replace(/<ul[^>]*>(.*?)<\/ul>/gs, (_, listContent) => {
     const items = listContent.match(/<li[^>]*>(.*?)<\/li>/gs) || [];
@@ -105,7 +107,7 @@ function htmlToTerminal(html) {
     });
     return styledItems.join('\n') + '\n\n';
   });
-  
+
   // Replace ordered lists
   output = output.replace(/<ol[^>]*>(.*?)<\/ol>/gs, (_, listContent) => {
     const items = listContent.match(/<li[^>]*>(.*?)<\/li>/gs) || [];
@@ -115,19 +117,48 @@ function htmlToTerminal(html) {
     });
     return styledItems.join('\n') + '\n\n';
   });
-  
+
   // Remove any remaining HTML tags
   output = output.replace(/<[^>]*>/g, '');
-  
+
   // Decode HTML entities
   output = output.replace(/&quot;/g, '"');
   output = output.replace(/&#39;/g, "'");
   output = output.replace(/&lt;/g, '<');
   output = output.replace(/&gt;/g, '>');
   output = output.replace(/&amp;/g, '&');
-  
+
   // Clean up excessive newlines
   output = output.replace(/\n{3,}/g, '\n\n');
-  
+
   return output.trim() + '\n';
 }
+
+function renderCodeBlock(code, language = null) {
+  const cleanCode = code.trim();
+  const lines = cleanCode.split('\n');
+
+  const contentWidth = Math.max(...lines.map(l => l.length));
+  const labelWidth = language ? `─ ${language} ─`.length : 0;
+  const innerWidth = Math.max(contentWidth, labelWidth);
+
+  // Build borders - all should be same total width
+  let topBorder;
+  if (language) {
+    const label = `─ ${language} ─`;
+    const extraDashes = innerWidth - label.length;
+    topBorder = chalk.dim(`┌${label}${'─'.repeat(extraDashes + 2)}┐`);
+  } else {
+    topBorder = chalk.dim(`┌${'─'.repeat(innerWidth + 2)}┐`);
+  }
+
+  // Content lines with padding to match inner width (account for the 2 spaces + 2 border chars)
+  const paddedLines = lines.map(line =>
+    chalk.dim('│ ') + chalk.cyan(line) + ' '.repeat(innerWidth - line.length) + chalk.dim(' │')
+  );
+
+  // Bottom border matches top border width (add 2 for the border characters)
+  const bottomBorder = chalk.dim(`└${'─'.repeat(innerWidth + 2)}┘`);
+
+  return '\n' + topBorder + '\n' + paddedLines.join('\n') + '\n' + bottomBorder + '\n\n';
+};
