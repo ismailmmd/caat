@@ -1,6 +1,6 @@
 {
   "name": "@slowcode/caat",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "type": "module",
   "main": "cli.js",
   "description": "CAAT (Cat-like Advanced Appearance Tool) - A CLI tool that converts Markdown files to styled terminal output with colors and formatting",
