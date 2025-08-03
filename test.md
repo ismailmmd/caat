@@ -34,4 +34,4 @@ Check out [GitHub](https://github.com) for more information.
 
 #### Conclusion
 
-This demonstrates the **tomd** CLI tool capabilities!
+This demonstrates the **caat** CLI tool capabilities!

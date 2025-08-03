@@ -7,7 +7,7 @@ import chalk from 'chalk';
 const filePath = process.argv[2];
 if (!filePath) {
   console.error(chalk.red("Error: Please provide a markdown file"));
-  console.error(chalk.yellow("Usage: tomd <markdown-file>"));
+  console.error(chalk.yellow("Usage: caat <markdown-file>"));
   process.exit(1);
 }
 

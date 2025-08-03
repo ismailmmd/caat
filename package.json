@@ -1,9 +1,9 @@
 {
-  "name": "@slowcode/tomd",
+  "name": "@slowcode/caat",
   "version": "1.0.3",
   "type": "module",
   "main": "cli.js",
-  "description": "A CLI tool that converts Markdown files to styled terminal output with colors and formatting",
+  "description": "CAAT (Cat-like Advanced Appearance Tool) - A CLI tool that converts Markdown files to styled terminal output with colors and formatting",
   "scripts": {
     "test": "node cli.js test.md",
     "start": "node cli.js",
@@ -16,7 +16,7 @@
     "release:major": "npm version major && git push origin main --follow-tags"
   },
   "bin": {
-    "tomd": "cli.js"
+    "caat": "cli.js"
   },
   "keywords": [
     "markdown",
@@ -32,13 +32,13 @@
   ],
   "author": "Ismail M",
   "license": "MIT",
-  "homepage": "https://github.com/ismailmmd/tomd#readme",
+  "homepage": "https://github.com/ismailmmd/caat#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ismailmmd/tomd.git"
+    "url": "git+https://github.com/ismailmmd/caat.git"
   },
   "bugs": {
-    "url": "https://github.com/ismailmmd/tomd/issues"
+    "url": "https://github.com/ismailmmd/caat/issues"
   },
   "engines": {
     "node": ">=16.0.0"

@@ -1,31 +1,31 @@
-# tomd
+# caat
 
 A CLI tool that converts Markdown files to beautifully styled terminal output with colors and formatting.
 
-Why tomd? Well, just like Tom 🐱 chases Jerry 🐭, **tomd** chases away boring plain text! It's the cat's meow alternative to `cat` for reading Markdown - because who wants to stare at raw markup when you can have rainbow-colored, properly formatted prose? 🌈✨
+Why **caat**? Just like the Unix `cat` command concatenates and displays files, **caat** (Cat-like Advanced Appearance Tool) takes it a step further by elegantly displaying your markdown with style! 🐱 It's the purr-fect alternative to plain `cat` for reading Markdown files - because who wants to stare at raw markup when you can have rainbow-colored, properly formatted prose? 🌈✨
 
 ## Installation
 
 Install globally via npm:
 
 ```bash
-npm install -g @slowcode/tomd
+npm install -g @slowcode/caat
 ```
 
 ## Usage
 
 ```bash
-tomd <markdown-file>
+caat <markdown-file>
 ```
 
 ### Examples
 
 ```bash
 # Display a README file
-tomd README.md
+caat README.md
 
 # Display any markdown file
-tomd docs/guide.md
+caat docs/guide.md
 ```
 
 ## Features
@@ -45,7 +45,7 @@ tomd docs/guide.md
 
 ## Contributing
 
-Contributions are welcome! Here's how you can help improve tomd:
+Contributions are welcome! Here's how you can help improve caat:
 
 ### Development Setup
 
@@ -53,7 +53,7 @@ Contributions are welcome! Here's how you can help improve tomd:
    ```bash
    npm install
    npm test
-   node cli.js test.md # read markdown file using tomd
+   node cli.js test.md # read markdown file using caat
    ```
 
 ### Making Changes
@@ -61,8 +61,6 @@ Contributions are welcome! Here's how you can help improve tomd:
 Follow [GitHub's open source contribution guidelines](https://docs.github.com/en/get-started/quickstart/contributing-to-projects) for best practices.
 
 ### Release Process
-
-#### Option 1: Automated Release (Recommended)
 
 1. **Update version and push**:
    ```bash
@@ -75,24 +73,6 @@ Follow [GitHub's open source contribution guidelines](https://docs.github.com/en
    - Go to GitHub > Releases > Create a new release
    - Use the git tag created by npm version (e.g., `v1.0.2`)
    - The CI/CD pipeline will automatically use the release tag version for npm publishing
-
-#### Option 2: Manual Version Control
-
-1. **Update version**:
-   ```bash
-   npm run version:patch  # for bug fixes (1.0.0 → 1.0.1)
-   npm run version:minor  # for new features (1.0.0 → 1.1.0)
-   npm run version:major  # for breaking changes (1.0.0 → 2.0.0)
-   ```
-
-2. **Push changes and tags**:
-   ```bash
-   git push origin main --follow-tags
-   ```
-
-3. **Create a GitHub release**:
-   - Use the git tag created by npm version
-   - The CI/CD pipeline will automatically update package.json version from the release tag
 
 ## License
 
