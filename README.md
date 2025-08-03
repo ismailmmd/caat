@@ -1,6 +1,10 @@
 # caat
 
+![npm](https://img.shields.io/npm/dt/@slowcode/caat)
+
 A CLI tool that converts Markdown files to beautifully styled terminal output with colors and formatting.
+
+![alt text](image.png)
 
 Why **caat**? Just like the Unix `cat` command concatenates and displays files, **caat** (Cat-like Advanced Appearance Tool) takes it a step further by elegantly displaying your markdown with style! 🐱 It's the purr-fect alternative to plain `cat` for reading Markdown files - because who wants to stare at raw markup when you can have rainbow-colored, properly formatted prose? 🌈✨
 
