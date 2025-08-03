@@ -59,16 +59,11 @@ function htmlToTerminal(html) {
     return chalk.bold.green(text.replace(/<[^>]*>/g, '')) + '\n';
   });
 
-  // Replace paragraphs
+  // Replace paragraphs 
   output = output.replace(/<p[^>]*>(.*?)<\/p>/gs, (_, text) => {
     return text.replace(/<[^>]*>/g, '') + '\n\n';
   });
 
-
-  // Replace inline code
-  output = output.replace(/<code[^>]*>(.*?)<\/code>/g, (_, code) => {
-    return chalk.dim('`') + chalk.cyan(code) + chalk.dim('`');
-  });
 
   // Replace strong/bold
   output = output.replace(/<strong[^>]*>(.*?)<\/strong>/g, (_, text) => {
@@ -142,16 +137,28 @@ function htmlToTerminal(html) {
 function renderCodeBlock(code, language = null) {
   const cleanCode = code.trim();
   const lines = cleanCode.split('\n');
-  const maxLength = Math.max(...lines.map(l => l.length), language ? language.length + 4 : 5);
 
-  const topBorder = language
-    ? chalk.dim(`┌─ ${language} ─${'─'.repeat(Math.max(0, maxLength - language.length - 3))}┐`)
-    : chalk.dim('┌' + '─'.repeat(maxLength + 2) + '┐');
+  const contentWidth = Math.max(...lines.map(l => l.length));
+  const labelWidth = language ? `─ ${language} ─`.length : 0;
+  const innerWidth = Math.max(contentWidth, labelWidth);
 
+  // Build borders - all should be same total width
+  let topBorder;
+  if (language) {
+    const label = `─ ${language} ─`;
+    const extraDashes = innerWidth - label.length;
+    topBorder = chalk.dim(`┌${label}${'─'.repeat(extraDashes + 2)}┐`);
+  } else {
+    topBorder = chalk.dim(`┌${'─'.repeat(innerWidth + 2)}┐`);
+  }
+
+  // Content lines with padding to match inner width (account for the 2 spaces + 2 border chars)
   const paddedLines = lines.map(line =>
-    chalk.dim('│ ') + chalk.cyan(line) + ' '.repeat(Math.max(0, maxLength - line.length)) + chalk.dim(' │')
+    chalk.dim('│ ') + chalk.cyan(line) + ' '.repeat(innerWidth - line.length) + chalk.dim(' │')
   );
 
-  const bottomBorder = chalk.dim('└' + '─'.repeat(maxLength + 2) + '┘');
+  // Bottom border matches top border width (add 2 for the border characters)
+  const bottomBorder = chalk.dim(`└${'─'.repeat(innerWidth + 2)}┘`);
+
   return '\n' + topBorder + '\n' + paddedLines.join('\n') + '\n' + bottomBorder + '\n\n';
 };

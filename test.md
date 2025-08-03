@@ -12,7 +12,7 @@ function hello(name) {
 }
 ```
 
-This is how to print Hello World! in modern java
+This is how to print Hello World! in modern java 😉
 
 ```java
 System.out.println("Hello, World!");
