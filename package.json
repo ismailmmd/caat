@@ -1,6 +1,6 @@
 {
   "name": "@slowcode/caat",
-  "version": "2.1.1",
+  "version": "3.0.0",
   "type": "module",
   "main": "build/cli.js",
   "description": "CAAT (Cat-like Advanced Appearance Tool) - A modular CLI tool that converts various file formats to styled terminal output with colors and formatting",
