@@ -3,7 +3,7 @@
   "version": "2.1.1",
   "type": "module",
   "main": "cli.js",
-  "description": "CAAT (Cat-like Advanced Appearance Tool) - A CLI tool that converts Markdown files to styled terminal output with colors and formatting",
+  "description": "CAAT (Cat-like Advanced Appearance Tool) - A modular CLI tool that converts various file formats to styled terminal output with colors and formatting",
   "scripts": {
     "test": "node cli.js test.md",
     "start": "node cli.js",
@@ -25,10 +25,11 @@
     "converter",
     "styled-output",
     "chalk",
-    "markdown-viewer",
+    "file-viewer",
     "console",
     "formatting",
-    "colors"
+    "colors",
+    "parser"
   ],
   "author": "Ismail M",
   "license": "MIT",
@@ -46,7 +47,9 @@
   "preferGlobal": true,
   "files": [
     "cli.js",
-    "README.md"
+    "parsers/",
+    "README.md",
+    "CONTRIBUTING.md"
   ],
   "dependencies": {
     "chalk": "5.4.1",

@@ -1,13 +1,16 @@
 #!/usr/bin/env node
 
 import fs from 'fs';
-import { marked } from 'marked';
+import path from 'path';
 import chalk from 'chalk';
+import { ParserFactory } from './parsers/index.js';
 
 const filePath = process.argv[2];
+
 if (!filePath) {
-  console.error(chalk.red("Error: Please provide a markdown file"));
-  console.error(chalk.yellow("Usage: caat <markdown-file>"));
+  console.error(chalk.red("Error: Please provide a file"));
+  console.error(chalk.yellow("Usage: caat <file>"));
+  console.error(chalk.gray(`Supported formats: ${ParserFactory.getSupportedExtensions().join(', ')}`));
   process.exit(1);
 }
 
@@ -17,148 +20,19 @@ if (!fs.existsSync(filePath)) {
 }
 
 try {
-  const md = fs.readFileSync(filePath, "utf8");
-  const htmlOutput = marked.parse(md);
-  console.log(htmlToTerminal(htmlOutput));
-} catch (error) {
-  console.error(chalk.red(`Error reading file: ${error.message}`));
-  process.exit(1);
-}
-
-function htmlToTerminal(html) {
-  let output = html;
-
-  // Replace code blocks
-  output = output.replace(/<pre><code[^>]*class="language-([^"]*)"[^>]*>(.*?)<\/code><\/pre>/gs, (_, lang, code) => {
-    return renderCodeBlock(code, lang);
-  });
-
-  output = output.replace(/<pre><code[^>]*>(.*?)<\/code><\/pre>/gs, (_, code) => {
-    return renderCodeBlock(code);
-  });
-
-  // Replace inline code
-  output = output.replace(/<code[^>]*>(.*?)<\/code>/g, (_, code) => {
-    return chalk.dim('`') + chalk.cyan(code) + chalk.dim('`');
-  });
-
-  // Replace HTML headings with styled versions
-  output = output.replace(/<h1[^>]*>(.*?)<\/h1>/g, (_, text) => {
-    return chalk.bold.underline.magenta(text.replace(/<[^>]*>/g, '')) + '\n\n';
-  });
-
-  output = output.replace(/<h2[^>]*>(.*?)<\/h2>/g, (_, text) => {
-    return chalk.bold.cyan(text.replace(/<[^>]*>/g, '')) + '\n\n';
-  });
-
-  output = output.replace(/<h3[^>]*>(.*?)<\/h3>/g, (_, text) => {
-    return chalk.bold.yellow(text.replace(/<[^>]*>/g, '')) + '\n';
-  });
-
-  output = output.replace(/<h[456][^>]*>(.*?)<\/h[456]>/g, (_, text) => {
-    return chalk.bold.green(text.replace(/<[^>]*>/g, '')) + '\n';
-  });
-
-  // Replace paragraphs 
-  output = output.replace(/<p[^>]*>(.*?)<\/p>/gs, (_, text) => {
-    return text.replace(/<[^>]*>/g, '') + '\n\n';
-  });
-
-
-  // Replace strong/bold
-  output = output.replace(/<strong[^>]*>(.*?)<\/strong>/g, (_, text) => {
-    return chalk.bold(text);
-  });
-
-  output = output.replace(/<b[^>]*>(.*?)<\/b>/g, (_, text) => {
-    return chalk.bold(text);
-  });
-
-  // Replace emphasis/italic
-  output = output.replace(/<em[^>]*>(.*?)<\/em>/g, (_, text) => {
-    return chalk.italic(text);
-  });
-
-  output = output.replace(/<i[^>]*>(.*?)<\/i>/g, (_, text) => {
-    return chalk.italic(text);
-  });
-
-  // Replace links with clickable terminal hyperlinks
-  output = output.replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/g, (_, href, text) => {
-    const cleanText = text.replace(/<[^>]*>/g, '');
-    const clickableLink = `\u001b]8;;${href}\u001b\\${chalk.blue.underline(cleanText)}\u001b]8;;\u001b\\`;
-    return clickableLink;
-  });
-
-  // Replace blockquotes
-  output = output.replace(/<blockquote[^>]*>(.*?)<\/blockquote>/gs, (_, quote) => {
-    const cleanQuote = quote.replace(/<[^>]*>/g, '').trim();
-    const lines = cleanQuote.split('\n');
-    const styledLines = lines.map(line => line.trim() ? chalk.gray('│ ') + line : '');
-    return '\n' + styledLines.join('\n') + '\n\n';
-  });
-
-  // Replace unordered lists
-  output = output.replace(/<ul[^>]*>(.*?)<\/ul>/gs, (_, listContent) => {
-    const items = listContent.match(/<li[^>]*>(.*?)<\/li>/gs) || [];
-    const styledItems = items.map(item => {
-      const text = item.replace(/<\/?li[^>]*>/g, '').replace(/<[^>]*>/g, '').trim();
-      return chalk.green('• ') + text;
-    });
-    return styledItems.join('\n') + '\n\n';
-  });
-
-  // Replace ordered lists
-  output = output.replace(/<ol[^>]*>(.*?)<\/ol>/gs, (_, listContent) => {
-    const items = listContent.match(/<li[^>]*>(.*?)<\/li>/gs) || [];
-    const styledItems = items.map((item, i) => {
-      const text = item.replace(/<\/?li[^>]*>/g, '').replace(/<[^>]*>/g, '').trim();
-      return chalk.blue(`${i + 1}. `) + text;
-    });
-    return styledItems.join('\n') + '\n\n';
-  });
-
-  // Remove any remaining HTML tags
-  output = output.replace(/<[^>]*>/g, '');
-
-  // Decode HTML entities
-  output = output.replace(/&quot;/g, '"');
-  output = output.replace(/&#39;/g, "'");
-  output = output.replace(/&lt;/g, '<');
-  output = output.replace(/&gt;/g, '>');
-  output = output.replace(/&amp;/g, '&');
-
-  // Clean up excessive newlines
-  output = output.replace(/\n{3,}/g, '\n\n');
-
-  return output.trim() + '\n';
-}
-
-function renderCodeBlock(code, language = null) {
-  const cleanCode = code.trim();
-  const lines = cleanCode.split('\n');
-
-  const contentWidth = Math.max(...lines.map(l => l.length));
-  const labelWidth = language ? `─ ${language} ─`.length : 0;
-  const innerWidth = Math.max(contentWidth, labelWidth);
-
-  // Build borders - all should be same total width
-  let topBorder;
-  if (language) {
-    const label = `─ ${language} ─`;
-    const extraDashes = innerWidth - label.length;
-    topBorder = chalk.dim(`┌${label}${'─'.repeat(extraDashes + 2)}┐`);
-  } else {
-    topBorder = chalk.dim(`┌${'─'.repeat(innerWidth + 2)}┐`);
+  const parser = ParserFactory.getParserByExtension(filePath);
+  
+  if (!parser) {
+    const ext = path.extname(filePath).toLowerCase();
+    console.error(chalk.red(`Error: Unsupported file format '${ext}'`));
+    console.error(chalk.yellow(`Supported formats: ${ParserFactory.getSupportedExtensions().join(', ')}`));
+    process.exit(1);
   }
 
-  // Content lines with padding to match inner width (account for the 2 spaces + 2 border chars)
-  const paddedLines = lines.map(line =>
-    chalk.dim('│ ') + chalk.cyan(line) + ' '.repeat(innerWidth - line.length) + chalk.dim(' │')
-  );
-
-  // Bottom border matches top border width (add 2 for the border characters)
-  const bottomBorder = chalk.dim(`└${'─'.repeat(innerWidth + 2)}┘`);
-
-  return '\n' + topBorder + '\n' + paddedLines.join('\n') + '\n' + bottomBorder + '\n\n';
-};
+  const content = fs.readFileSync(filePath, "utf8");
+  const output = parser.parse(content);
+  console.log(output);
+} catch (error) {
+  console.error(chalk.red(`Error processing file: ${error.message}`));
+  process.exit(1);
+}
