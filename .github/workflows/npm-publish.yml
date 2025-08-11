@@ -16,6 +16,7 @@ jobs:
         with:
           node-version: 20
       - run: npm ci
+      - run: npm run build
       - run: npm test
 
   publish-npm:
@@ -61,6 +62,7 @@ jobs:
           else
             echo "Version already matches, skipping update"
           fi
+      - run: npm run build
       - run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

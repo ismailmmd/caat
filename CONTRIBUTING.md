@@ -1,26 +1,33 @@
 # Contributing to CAAT
 
-Thank you for your interest in contributing to CAAT! This guide will help you understand the project structure and how to add new parsers.
+Thank you for your interest in contributing to CAAT! This guide will help you understand the project structure and how to add new parsers. CAAT is written in TypeScript for better type safety and developer experience.
 
 ## Project Structure
 
 ```
 caat/
-├── cli.js              # Main CLI entry point
-├── parsers/            # Parser modules directory
-│   ├── index.js        # Parser factory and registry
-│   └── md.js          # Markdown parser implementation
+├── src/                # TypeScript source code
+│   ├── cli.ts          # Main CLI entry point
+│   └── parsers/        # Parser modules directory
+│       ├── base.ts     # ParserInterface definition
+│       ├── index.ts    # Parser factory and registry
+│       └── md.ts       # Markdown parser implementation
+├── build/              # Compiled JavaScript output (generated)
+│   ├── cli.js          # Compiled CLI
+│   └── parsers/        # Compiled parser modules
+├── tsconfig.json       # TypeScript configuration
 ├── package.json        # Package configuration
-└── README.md          # Project documentation
+└── README.md           # Project documentation
 ```
 
 ## Architecture Overview
 
 CAAT uses a modular parser system that allows for easy extension:
 
-- **cli.js**: Main entry point that handles file input and delegates to appropriate parsers
-- **ParserFactory**: Registry system for managing different file format parsers
-- **Parser modules**: Individual parsers for specific file formats (e.g., Markdown, JSON, etc.)
+- **cli.ts**: Main entry point that handles file input and delegates to appropriate parsers
+- **ParserInterface**: TypeScript interface defining the contract for all parsers
+- **ParserFactory**: Registry system for managing different parser instances
+- **Parser implementations**: Individual parsers for specific file formats (e.g., Markdown, JSON, etc.)
 
 ## Adding a New Parser
 
@@ -28,26 +35,26 @@ To add support for a new file format, follow these steps:
 
 ### 1. Create a Parser Module
 
-Create a new file in the `parsers/` directory (e.g., `parsers/json.js`):
+Create a new file in the `src/parsers/` directory (e.g., `src/parsers/json.ts`):
 
-```javascript
-import { BaseParser } from './base.js';
+```typescript
+import { ParserInterface } from './parser-interface.js';
 
-export class JsonParser extends BaseParser {
-  static getExtensions() {
+export class JsonParser implements ParserInterface {
+  getExtensions(): string[] {
     return ['.json'];
   }
 
-  static parse(content) {
+  parse(content: string): string {
     try {
-      const jsonData = JSON.parse(content);
+      const jsonData: unknown = JSON.parse(content);
       return this.formatJson(jsonData);
     } catch (error) {
-      throw new Error(this.formatError(error, 'JSON file'));
+      throw new Error(`Error parsing JSON: ${error instanceof Error ? error.message : 'Unknown error'}`);
     }
   }
 
-  static formatJson(data, indent = 0) {
+  private formatJson(data: unknown): string {
     // Your formatting logic here
     return JSON.stringify(data, null, 2);
   }
@@ -56,51 +63,75 @@ export class JsonParser extends BaseParser {
 
 ### 2. Register the Parser
 
-Add your parser to `parsers/index.js`:
+Add your parser to `src/parsers/index.ts`:
 
-```javascript
+```typescript
 import { JsonParser } from './json.js';
 
-// Add this line to the parsers Map
-parsers.set('json', JsonParser);
+// Add this line to register the parser instance
+parsers.set('json', new JsonParser());
 ```
 
 ### 3. Parser Requirements
 
 Every parser must:
 
-- **Extend BaseParser**: All parsers must extend the `BaseParser` class
-- **Implement `getExtensions()`**: Static method returning an array of supported file extensions
-- **Implement `parse(content)`**: Static method that takes file content as string and returns formatted output
-- **Use BaseParser utilities**: Leverage built-in methods like `formatError()`
+- **Implement ParserInterface**: All parsers must implement the `ParserInterface`
+- **Implement `getExtensions()`**: Method returning an array of supported file extensions
+- **Implement `parse(content)`**: Method that takes file content as string and returns formatted output
+- **Handle errors properly**: Use proper TypeScript error handling with type guards
 
-#### BaseParser Features
+#### ParserInterface Definition
 
-The `BaseParser` class provides:
+The `ParserInterface` (defined in `src/parsers/parser-interface.ts`) defines the contract that all parsers must follow:
 
-- **`formatError(error, filename)`**: Formats error messages consistently
+```typescript
+export interface ParserInterface {
+  /**
+   * Returns the supported file extensions for the parser
+   */
+  getExtensions(): string[];
+  /**
+   * Parses the content and returns the formatted output
+   * @param content - Content to parse
+   * @returns Formatted output
+   */
+  parse(content: string): string;
+}
+```
 
 ### 4. Testing Your Parser
 
-Test your parser with the CLI:
+Build and test your parser with the CLI:
 
 ```bash
+# Build the TypeScript code
+npm run build
+
 # Test with your new file format
-node cli.js example.json
+node build/cli.js example.json
+
+# Or use the CLI command that builds and runs
+npm run cli example.json
 ```
 
 ## Development Guidelines
 
 ### Code Style
+- Write TypeScript with proper type annotations
+- Implement the `ParserInterface` for all parsers
 - Use ES6+ features and modules
 - Follow existing naming conventions
-- Add proper error handling
+- Add proper error handling with type guards (`error instanceof Error`)
 - Use chalk for terminal styling
+- Enable strict TypeScript checking
+- Register parser instances (not classes) in the factory
 
 ### Error Handling
 - Throw descriptive errors for parsing failures
 - Handle edge cases gracefully
 - Provide helpful error messages to users
+- Always use type guards for error handling: `error instanceof Error ? error.message : 'Unknown error'`
 
 ### Documentation
 - Update README.md if needed

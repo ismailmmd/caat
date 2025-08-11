@@ -2,7 +2,7 @@
 
 ![npm](https://img.shields.io/npm/dt/@slowcode/caat)
 
-A modular CLI tool that converts various file formats to beautifully styled terminal output with colors and formatting.
+A modular CLI tool written in TypeScript that converts various file formats to beautifully styled terminal output with colors and formatting.
 
 ![alt text](image.png)
 
@@ -63,11 +63,19 @@ Want to add support for a new file format? Check out our [Contributing Guide](CO
 
 ### Development Setup
 
+**For TypeScript development**:
+   ```bash
+   npm install
+   npm run build    # Compile TypeScript to JavaScript
+   npm run cli      # Build and run CLI
+   npm test         # Build and test with markdown file
+   ```
+
 **Test the CLI locally**:
    ```bash
    npm install
    npm test
-   node cli.js test.md # read markdown file using caat
+   node build/cli.js test.md # read markdown file using caat
    ```
 
 ### Making Changes
