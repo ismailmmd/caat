@@ -56,11 +56,6 @@ export class MarkdownParser implements ParserInterface {
       return chalk.bold.green(text.replace(/<[^>]*>/g, '')) + '\n';
     });
 
-    // Replace paragraphs
-    output = output.replace(/<p[^>]*>(.*?)<\/p>/gs, (_, text: string) => {
-      return text.replace(/<[^>]*>/g, '') + '\n\n';
-    });
-
     // Replace strong/bold
     output = output.replace(/<strong[^>]*>(.*?)<\/strong>/g, (_, text: string) => {
       return chalk.bold(text);
@@ -77,6 +72,11 @@ export class MarkdownParser implements ParserInterface {
 
     output = output.replace(/<i[^>]*>(.*?)<\/i>/g, (_, text: string) => {
       return chalk.italic(text);
+    });
+
+    // Replace paragraphs
+    output = output.replace(/<p[^>]*>(.*?)<\/p>/gs, (_, text: string) => {
+      return text.replace(/<[^>]*>/g, '') + '\n\n';
     });
 
     // Replace links with clickable terminal hyperlinks
