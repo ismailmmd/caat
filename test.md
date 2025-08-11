@@ -12,12 +12,6 @@ function hello(name) {
 }
 ```
 
-This is how to print Hello World! in modern java 😉
-
-```java
-System.out.println("Hello, World!");
-```
-
 This is an inline code. Why `console.log({} == {});` is not same as `console.log({} === {});`
 
 ### Lists

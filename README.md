@@ -2,11 +2,11 @@
 
 ![npm](https://img.shields.io/npm/dt/@slowcode/caat)
 
-A CLI tool that converts Markdown files to beautifully styled terminal output with colors and formatting.
+A modular CLI tool written in TypeScript that converts various file formats to beautifully styled terminal output with colors and formatting.
 
 ![alt text](image.png)
 
-Why **caat**? Just like the Unix `cat` command concatenates and displays files, **caat** (Cat-like Advanced Appearance Tool) takes it a step further by elegantly displaying your markdown with style! 🐱 It's the purr-fect alternative to plain `cat` for reading Markdown files - because who wants to stare at raw markup when you can have rainbow-colored, properly formatted prose? 🌈✨
+Why **caat**? Just like the Unix `cat` command concatenates and displays files, **caat** (Cat-like Advanced Appearance Tool) takes it a step further by elegantly displaying your files with style! 🐱 It's the purr-fect alternative to plain `cat` for reading various file formats - because who wants to stare at raw content when you can have rainbow-colored, properly formatted output? 🌈✨
 
 ## Installation
 
@@ -19,7 +19,7 @@ npm install -g @slowcode/caat
 ## Usage
 
 ```bash
-caat <markdown-file>
+caat <file>
 ```
 
 ### Examples
@@ -28,12 +28,13 @@ caat <markdown-file>
 # Display a README file
 caat README.md
 
-# Display any markdown file
+# Display any supported file
 caat docs/guide.md
 ```
 
 ## Features
 
+### Markdown Support
 - ✨ Styled headings with different colors (H1-H6)
 - 📝 Formatted paragraphs and text
 - 💻 Syntax-highlighted code blocks
@@ -49,15 +50,32 @@ caat docs/guide.md
 
 ## Contributing
 
-Contributions are welcome! Here's how you can help improve caat:
+Contributions are welcome! CAAT's modular architecture makes it easy to add support for new file formats.
+
+### Adding a New Parser
+
+Want to add support for a new file format? Check out our [Contributing Guide](CONTRIBUTING.md) for detailed instructions on:
+
+- Creating new parser modules
+- Parser architecture and requirements
+- Testing and submission process
+- Examples of potential parsers (JSON, CSV, YAML, etc.)
 
 ### Development Setup
+
+**For TypeScript development**:
+   ```bash
+   npm install
+   npm run build    # Compile TypeScript to JavaScript
+   npm run cli      # Build and run CLI
+   npm test         # Build and test with markdown file
+   ```
 
 **Test the CLI locally**:
    ```bash
    npm install
    npm test
-   node cli.js test.md # read markdown file using caat
+   node build/cli.js test.md # read markdown file using caat
    ```
 
 ### Making Changes
