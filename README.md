@@ -1,6 +1,7 @@
 # caat
 
 ![npm](https://img.shields.io/npm/dt/@slowcode/caat)
+![NPM Version](https://img.shields.io/npm/v/%40slowcode%2Fcaat?logo=npm&logoColor=red)
 
 A modular CLI tool written in TypeScript that converts various file formats to beautifully styled terminal output with colors and formatting.
 
@@ -10,7 +11,7 @@ Why **caat**? Just like the Unix `cat` command concatenates and displays files, 
 
 ## Installation
 
-Install globally via :crystal_ball:[npm](https://www.npmjs.com/package/@slowcode/caat):
+Install globally via https://www.npmjs.com/package/@slowcode/caat
 
 ```bash
 npm install -g @slowcode/caat
