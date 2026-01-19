@@ -60,7 +60,7 @@
     "marked": "16.2.0"
   },
   "devDependencies": {
-    "@types/node": "^24.2.1",
+    "@types/node": "^25.0.9",
     "typescript": "^5.9.2"
   },
   "funding": {
